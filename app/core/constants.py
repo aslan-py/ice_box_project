@@ -86,7 +86,7 @@ class UserConstants:
     PHONE_ERR = 'Номер телефона должен быть в формате +7XXXXXXXXXX'
     PASS_EASY_MSG = 'Пароль слишком простой {}'
     GET_ME_SUM = 'Посмотреть свои данные'
-    DEL_ME_SUM = 'Декативировать себя'
+    DEL_ME_SUM = 'Деактивировать себя'
     PATCH_ME_SUM = 'Изменить свои данные'
     PATCH_USER = 'Изменить данные юзера'
     GET_ALL = 'Посмотреть всех юзеров'
