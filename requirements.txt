@@ -1,0 +1,33 @@
+# Web Framework
+fastapi==0.129.0
+uvicorn==0.40.0
+python-multipart==0.0.22
+
+# Database & Migrations
+SQLAlchemy==2.0.46
+aiosqlite==0.22.1
+alembic==1.18.4
+
+# Validation & Settings
+pydantic==2.12.5
+pydantic-settings==2.13.0
+email-validator==2.3.0
+
+# Task Queue (Celery)
+celery==5.4.0
+redis==7.2.0
+flower==2.0.1
+
+# Auth & Security
+PyJWT==2.11.0
+
+# Services (Mail & HTTP)
+fastapi-mail==1.4.1
+httpx==0.28.1
+
+# Utils
+python-dotenv==1.2.1
+loguru==0.7.2
+
+# sms
+smsaero_api==3.2.0

@@ -1,0 +1,75 @@
+services:
+  # Основной API
+  ice-app:
+    build: .
+    container_name: ice-app
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    # Запускаем миграции и сервер одной строкой без entrypoint.sh
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      ice-redis:
+        condition: service_healthy
+      ice-rabbit:
+        condition: service_healthy
+    networks:
+      - ice-network
+
+  # Celery Worker
+  ice-worker:
+    build: .
+    container_name: ice-worker
+    env_file:
+      - .env
+    command: python -m celery -A app.celery.main.celery_app worker --loglevel=info -P solo
+    depends_on:
+      - ice-app
+    networks:
+      - ice-network
+
+  # Flower
+  ice-flower:
+    build: .
+    container_name: ice-flower
+    ports:
+      - 5555:5555
+    env_file:
+      - .env
+    command: python -m celery -A app.celery.main.celery_app flower --port=5555
+    depends_on:
+      - ice-worker
+    networks:
+      - ice-network
+
+  # Redis
+  ice-redis:
+    image: redis:latest
+    container_name: ice-redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - ice-network
+
+  # RabbitMQ
+  ice-rabbit:
+    image: rabbitmq:3-management
+    container_name: ice-rabbit
+    ports:
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ice-network
+
+networks:
+  ice-network:
